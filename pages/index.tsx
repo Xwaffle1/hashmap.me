@@ -4,6 +4,7 @@ import Prism from "prismjs";
 import "prismjs/components/prism-jsx";
 import "prismjs/components//prism-go";
 import "prismjs/themes/prism-tomorrow.css"; // or any other theme you prefer
+import Image from "next/image";
 
 // const nodePre = useRef<HTMLPreElement>(null)
 
@@ -59,9 +60,14 @@ export default function Home() {
 
   return (
     <main className="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900 px-4 py-8 md:px-6 lg:py-16">
-      <h1 className="text-3xl font-bold tracking-tighter text-gray-900 dark:text-gray-100 m-8">
-        Hashmap.me
-      </h1>
+      <div className="flex flex-row justify-center justify-items-center gap-0 mb-4">
+        <div className="flex flex-col justify-center" style={{maxWidth: 64}}>
+          <Image src="/favi.png" alt="Hashmap.me Logo" width={100} height={100} layout="fit" />
+        </div>
+        <h1 className="text-3xl font-bold tracking-tighter text-gray-900 dark:text-gray-100 my-8 mx-2">
+          Hashmap.me
+        </h1>
+      </div>
       <div className="w-full max-w-md flex items-center space-x-2">
         <input
           // @ts-ignore
