@@ -29,7 +29,7 @@ export default function Home() {
 
     axios
       .post("/api/create", {
-        hashmapName: inputText.replaceAll(" ", "-").replaceAll(".", "-")
+        hashmapName: inputText?.replace(" ", "-").replace(".", "-")
       })
       .then((res) => {
         // console.log(`statusCode: ${res.statusCode}`)
