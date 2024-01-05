@@ -1,6 +1,7 @@
 import Head from "next/head";
 import "../styles/globals.css";
 import '../styles/prism-vs.css'
+import { Analytics } from '@vercel/analytics/react';
 
 function MyApp({ Component, pageProps }) {
   return (
@@ -17,6 +18,7 @@ function MyApp({ Component, pageProps }) {
         <meta property="twitter:description" content="Explore Hashmap.me - the effortless way to store and access your data through HTTP. Simplify data management with our user-friendly hashmap interface, integrated seamlessly with MongoDB collections. No database setup required." />
         <meta property="twitter:image" content="https://hashmap.me/preview.png" />
       </Head>
+      <Analytics />
       <Component {...pageProps} />
     </div>
   );
