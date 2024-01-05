@@ -15,13 +15,21 @@ type Tabs = "nodejs" | "curl" | "go";
 
 export default function Home() {
   const [apiToken, setApiToken] = React.useState("");
+  const [error, setError] = React.useState("");
+  const [inputText, setInputText] = React.useState("");
   const [activeTab, setActiveTab] = React.useState<Tabs>("nodejs");
-  function createHashmap(e) {
-    e.preventDefault();
+  const [loading, setLoading] = React.useState(false);
+
+  function createHashmap() {
+    if (!inputText || inputText.trim().length === 0 || loading === true) {
+      return;
+    }
+
+    setLoading(true);
 
     axios
       .post("/api/create", {
-        hashmapName: e.target.hashmapName.value,
+        hashmapName: inputText.replaceAll(" ", "-").replaceAll(".", "-")
       })
       .then((res) => {
         // console.log(`statusCode: ${res.statusCode}`)
@@ -32,26 +40,22 @@ export default function Home() {
         } else {
           setApiToken("");
         }
+        setError("");
+        setLoading(false);
       })
       .catch((error) => {
         console.error(error);
         console.log(error.response.status);
         console.log(error.response.data.message);
-        setApiToken(error.response.data.message);
+        setApiToken("");
+        setError(error.response.data.message);
+        setLoading(false);
       });
   }
 
   useEffect(() => {
     Prism.highlightAll();
-    console.log("Hightlighted");
-    Prism.highlightAll();
-
-    Prism.highlightAll();
-
-    Prism.highlightAll();
-  }, []); // <--- run when post updates
-
-  // Prism.highlightAll()
+  }, []);
 
   return (
     <main className="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900 px-4 py-8 md:px-6 lg:py-16">
@@ -60,13 +64,33 @@ export default function Home() {
       </h1>
       <div className="w-full max-w-md flex items-center space-x-2">
         <input
+          // @ts-ignore
+          onChange={(e) => setInputText(e.target.value)}
           className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 flex-grow"
           placeholder="Hashmap name?"
         />
-        <button className="inline-flex bg-black hover:text-black text-white items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 text-primary-foreground hover:bg-gray-300 h-10 px-4 py-2">
+        <button
+          onClick={() => {
+            createHashmap();
+          }}
+          disabled={
+            !inputText || inputText.trim().length === 0 || loading === true
+          }
+          className="inline-flex bg-black hover:text-black text-white items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 text-primary-foreground hover:bg-gray-300 h-10 px-4 py-2"
+        >
           Generate
         </button>
       </div>
+      {apiToken && (
+        <div className="mt-8 p-4 bg-green-200 text-green-700 dark:bg-green-800 dark:text-green-300 rounded-md w-full max-w-xl">
+          <p><span className="text-green-700 font-bold">Token: {" "}</span>{apiToken}</p>
+        </div>
+      )}
+      {error && (
+        <div className="mt-8 p-4 bg-red-200 text-red-700 dark:bg-red-800 dark:text-red-300 rounded-md w-full max-w-xl">
+          <p>{error}</p>
+        </div>
+      )}
       <div className="m-8 p-4 bg-yellow-200 text-yellow-700 dark:bg-yellow-800 dark:text-yellow-300 rounded-md w-full max-w-xl">
         <p>
           Be aware, once a token is generated, it{" "}
