@@ -20,6 +20,16 @@ function MyApp({ Component, pageProps }) {
       </Head>
       <Analytics />
       <Component {...pageProps} />
+      <footer className='w-full flex justify-center p-2 text-xs bg-gray-100'>
+        <a
+          href="https://chasem.dev"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <span className='text-xs'>Designed by <i className='underline'>Chase Myers</i></span>
+        </a>
+      </footer>
+
     </div>
   );
 }
