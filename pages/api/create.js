@@ -2,35 +2,47 @@ import nextConnect from 'next-connect';
 import dbClass from '../../util/database';
 import uuid from 'uuid-random';
 import { validate } from 'uuid';
+import rateLimit from '../../util/rate-limit'
 
 
 const handler = nextConnect();
 handler.use(dbClass);
+
+
+const limiter = rateLimit({
+  interval: 60 * 60 * 1000, // 60 seconds
+  uniqueTokenPerInterval: 500, // Max 500 users per second
+})
 
 handler.post(async (req, res) => {
   let db = req.db
   console.log(req.body)
   console.log("CREATE?")
   // var json = JSON.parse()
-
   var collectionExists = await db.listCollections({ name: req.body.hashmapName.toLowerCase()}).hasNext()
 
   const fakeUuid = formatAsUUID(req.body.hashmapName.toLowerCase());
-  console.log(fakeUuid);
   const isUUID = validate(fakeUuid);
-  console.log("isUUID: " + isUUID);
   if (isUUID) {
     console.error("UUID USED TO CRREATE.");
     res.status(400).json({"message": "HASHMAP ALREADY IN USE."})
     return
   }
 
-  console.log("Collection exists : " + collectionExists)
   if (collectionExists){
+    console.log("Collection exists : " + collectionExists)
     res.status(400).json({"message": "HASHMAP ALREADY IN USE."})
     return
   }  
-  console.log("MAKING COLLECTION?")
+  try {
+    await limiter.check(res, 4, 'CACHE_TOKEN') // 2 hashmaps per hour
+  } catch {
+    console.log("Rate limit exceeded : " + req.body.hashmapName)
+
+    res.status(429).json({ error: 'Rate limit exceeded' })
+    return;
+  }
+  console.log("Creating collection...");
 
   let collection = await db.createCollection(req.body.hashmapName.toLowerCase())
   console.log(collection);
