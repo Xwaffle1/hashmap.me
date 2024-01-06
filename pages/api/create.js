@@ -50,7 +50,7 @@ handler.post(async (req, res) => {
   var tokenUuid = req.body.hashmapName.toLowerCase() + "-" + uuid()
 
   let tokensCollection = db.collection('hashmapme-tokens')
-  let doc = await tokensCollection.insert({uuid: tokenUuid, collectionName: req.body.hashmapName.toLowerCase()});
+  let doc = await tokensCollection.insertOne({uuid: tokenUuid, collectionName: req.body.hashmapName.toLowerCase()});
 
   res.json({token: tokenUuid});
 });
@@ -70,5 +70,6 @@ function isUUID ( uuid ) {
 }
 
 
-export default handler;
-
+export default async function handle(...params) {
+  await handler(...params);
+}

@@ -81,7 +81,7 @@ handler.put(async (req, res) => {
 
   if (currentIndexWithKey.length == 0){
     // console.log("Inserted into Database..");
-    let doc = await collectionByUUID.insert({key: key, value: value});        
+    let doc = await collectionByUUID.insertOne({key: key, value: value});        
     res.status(200).json(doc);
   }else{
     // console.log("UPDATING Database..");
