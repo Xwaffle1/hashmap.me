@@ -157,7 +157,7 @@ export default function Home() {
               PUT https://hashmap.me/api/write
             </code>
             <p className="mt-2 text-gray-700 dark:text-gray-300">
-              Include the following in the request body:
+              Include the following in the request JSON body:
             </p>
             <div className="bg-gray-200  rounded p-2">
               <p className="text-sm font-medium text-gray-900">
@@ -259,15 +259,21 @@ export default function Home() {
             <pre className="block bg-gray-200 dark:bg-gray-800 rounded p-2 text-sm">
               <code data-language={"jsx"} className={`language-jsx`}>
                 {`var myHeaders = new Headers();
-myHeaders.append("x-api-key", "YOUR-API-KEY");
+myHeaders.append("x-api-key", "[YOUR-API-KEY]");
+myHeaders.append("Content-Type", "application/json");
+
+var raw = JSON.stringify({
+  "key": "test",
+  "value": "Value!"
+});
 
 var requestOptions = {
-  method: 'GET',
+  method: 'PUT',
   headers: myHeaders,
-  redirect: 'follow'
+  body: raw
 };
 
-fetch("https://hashmap.me/api/read", requestOptions)
+fetch("https://hashmap.me/api/write", requestOptions)
   .then(response => response.text())
   .then(result => console.log(result))
   .catch(error => console.log('error', error));`}
@@ -287,8 +293,13 @@ fetch("https://hashmap.me/api/read", requestOptions)
           >
             <pre className="block bg-gray-200 dark:bg-gray-800 rounded p-2 text-sm">
               <code data-language={"jsx"} className={`language-jsx`}>
-                {`curl --location 'https://hashmap.me/api/read' \r
-  --header 'x-api-key: YOUR-API-KEY'`}
+                {`curl --location --request PUT 'https://hashmap.me/api/write' \r
+--header 'x-api-key: YOUR-API-KEY' \r
+--header 'Content-Type: application/json' \r
+--data '{
+    "key": "test",
+    "value": "Value!"
+}'`}
               </code>
             </pre>
           </div>
@@ -308,24 +319,34 @@ fetch("https://hashmap.me/api/read", requestOptions)
 
 import (
   "fmt"
+  "strings"
   "net/http"
   "io/ioutil"
 )
 
 func main() {
 
-  url := "https://hashmap.me/api/read"
-  method := "GET"
+  url := "https://hashmap.me/api/write"
+  method := "PUT"
+
+  payload := strings.NewReader(\`{\`+"
+"+\`
+    "key": "test",\`+"
+"+\`
+    "value": "Value!"\`+"
+"+\`
+}\`)
 
   client := &http.Client {
   }
-  req, err := http.NewRequest(method, url, nil)
+  req, err := http.NewRequest(method, url, payload)
 
   if err != nil {
     fmt.Println(err)
     return
   }
   req.Header.Add("x-api-key", "YOUR-API-KEY")
+  req.Header.Add("Content-Type", "application/json")
 
   res, err := client.Do(req)
   if err != nil {
