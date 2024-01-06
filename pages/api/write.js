@@ -29,17 +29,20 @@ handler.put(async (req, res) => {
   var accessToken = req.headers['x-api-key']
 
 
-  if (req.body.key == undefined){
+  if (req.body.key == undefined && req.body.KEY == ""){
     // console.log("NO KEY.")
     res.status(400).json({message: "Error. Please provide a KEY in your request body for the hashmap record you are attempting to put."})
     return
   }
 
-  if (req.body.value == undefined){
+  if (req.body.value == undefined && req.body.VALUE == undefined){
     // console.log("NO VALUE.")
     res.status(400).json({message: "Error. Please provide a VALUE in your request body for the hashmap record you are attempting to put."})
     return
   }
+
+  const key = req.body.key ?? req.body.KEY
+  const value = req.body.value ?? req.body.VALUE
   
   let tokensCollection = await db.collection("hashmapme-tokens")
   var index = await tokensCollection.find({ uuid: accessToken}).toArray()
@@ -64,16 +67,16 @@ handler.put(async (req, res) => {
 
 
   // console.log("FOUND COLLECTION...")
-  var currentIndexWithKey = await collectionByUUID.find({ key: req.body.key}).toArray()
+  var currentIndexWithKey = await collectionByUUID.find({ key: key}).toArray()
   // console.log(currentIndexWithKey)
 
   if (currentIndexWithKey.length == 0){
     // console.log("Inserted into Database..");
-    let doc = await collectionByUUID.insert({key: req.body.key, value: req.body.value});        
+    let doc = await collectionByUUID.insert({key: key, value: value});        
     res.status(200).json(doc);
   }else{
     // console.log("UPDATING Database..");
-    let doc = await collectionByUUID.updateOne({ key: req.body.key}, {$set: {value: req.body.value}});        
+    let doc = await collectionByUUID.updateOne({ key: key}, {$set: {value: value}});        
     res.status(200).json(doc);
   }
   
