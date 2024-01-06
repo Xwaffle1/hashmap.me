@@ -25,19 +25,26 @@ handler.put(async (req, res) => {
   if(req.headers['x-api-key'] == undefined){
     // console.log("NO API TOKEN.")
     res.status(400).json({message: "Please provide an x-api-key to access this dataset."})
+    return
   }
   var accessToken = req.headers['x-api-key']
 
+  // Ensure request is is json application content type
+  if (req.method === 'PUT' && req.headers['content-type'] != "application/json"){
+    // console.log("NOT JSON.")
+    res.status(400).json({message: "Error. Please provide a JSON body, with the Content-Type header set to application/json."})
+    return
+  }
 
   if (req.body.key == undefined && req.body.KEY == ""){
     // console.log("NO KEY.")
-    res.status(400).json({message: "Error. Please provide a KEY in your request body for the hashmap record you are attempting to put."})
+    res.status(400).json({message: "Error. Please provide a KEY in your JSON request body for the hashmap record you are attempting to put."})
     return
   }
 
   if (req.body.value == undefined && req.body.VALUE == undefined){
     // console.log("NO VALUE.")
-    res.status(400).json({message: "Error. Please provide a VALUE in your request body for the hashmap record you are attempting to put."})
+    res.status(400).json({message: "Error. Please provide a VALUE in your JSON request body for the hashmap record you are attempting to put."})
     return
   }
 
