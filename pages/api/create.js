@@ -10,8 +10,8 @@ handler.use(dbClass);
 
 
 const limiter = rateLimit({
-  interval: 60 * 60 * 1000, // 60 seconds
-  uniqueTokenPerInterval: 500, // Max 500 users per second
+  interval: 60 * 1000, // 60 seconds
+  uniqueTokenPerInterval: 30, // Max 30 creates per interval
 })
 
 handler.post(async (req, res) => {
@@ -35,7 +35,7 @@ handler.post(async (req, res) => {
     return
   }  
   try {
-    await limiter.check(res, 4, 'CACHE_TOKEN') // 2 hashmaps per hour
+    await limiter.check(res, 10, 'CACHE_TOKEN') // 2 hashmaps per hour
   } catch {
     console.log("Rate limit exceeded : " + req.body.hashmapName)
 
