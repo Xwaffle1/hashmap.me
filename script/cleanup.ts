@@ -3,10 +3,7 @@ import { MongoClient } from 'mongodb';
 require('dotenv').config();
 
 function init() {
-    const client: MongoClient = new MongoClient(process.env.MONGO_CONNECTION, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    });
+    const client: MongoClient = new MongoClient(process.env.MONGO_CONNECTION);
     
     client.connect().then(async (mongo) => {
         console.log("Connected.")
@@ -18,7 +15,7 @@ function init() {
             if (document.collectionName.length === 32) {
                 // Delete collection named document.collectionName
                 console.log("Deleting collection " + document.collectionName);
-                await mongo.db("mapbase").collection(document.collectionName).drop();
+                // await mongo.db("mapbase").collection(document.collectionName).drop();
             }
         }
     });
