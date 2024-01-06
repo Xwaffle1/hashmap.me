@@ -22,7 +22,7 @@ function MyApp({ Component, pageProps }) {
       <Component {...pageProps} />
       <footer className='w-full flex justify-center p-2 text-xs bg-gray-100'>
         <a
-          href="https://chasem.dev"
+          href="https://chasem.dev?ref=hashmap-me"
           target="_blank"
           rel="noopener noreferrer"
         >
