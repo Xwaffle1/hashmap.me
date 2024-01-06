@@ -67,6 +67,8 @@ handler.put(async (req, res) => {
 
   var collectionStats = await collectionByUUID.stats()
   console.log("CollectionSize: " + collectionStats.size)
+  console.log("collectionName: " + collectionName)
+
   if (collectionStats.size >= 1000 * 1000 * 1000){
       console.log("DATA TOO LARGE")
       res.status(400).json({message: "Error. Large collection. Hey cutie, I wasn't expecting us to move this fast. Your collection is greater than 1GB..."})
