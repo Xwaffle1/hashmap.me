@@ -65,7 +65,7 @@ handler.put(async (req, res) => {
   var collectionName = index[0].collectionName
   var collectionByUUID = await db.collection(collectionName)
 
-  var collectionStats = await collectionByUUID.stats()
+  var collectionStats = await collectionByUUID.totalSize()
   console.log("CollectionSize: " + collectionStats.size)
   console.log("collectionName: " + collectionName)
 
