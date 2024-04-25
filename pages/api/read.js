@@ -1,5 +1,8 @@
 import nextConnect from 'next-connect';
 import dbClass from '../../util/database';
+
+export const runtime = 'edge';
+
 const handler = nextConnect();
 const cors = require('cors')
 

@@ -2,6 +2,9 @@ import nextConnect from 'next-connect';
 import dbClass from '../../util/database';
 import { Db } from 'mongodb';
 
+
+export const runtime = 'edge';
+
 const cors = require('cors')
 
 const handler = nextConnect();
