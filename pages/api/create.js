@@ -4,7 +4,7 @@ import uuid from 'uuid-random';
 import { validate } from 'uuid';
 import rateLimit from '../../util/rate-limit'
 
-export const runtime = 'edge';
+// export const runtime = 'edge';
 
 const handler = nextConnect();
 handler.use(dbClass);
